@@ -1,0 +1,38 @@
+version: "3"
+
+volumes:
+  genie_db: {}
+  genie_cache: {}
+  static_volume:
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+
+    expose:
+      - 80
+      - 433
+
+    ports:
+      - 80:80
+      - 443:443
+
+    volumes:
+      - .:/app/
+      - static_volume:/app/static/
+
+    environment:
+      - SECRET_KEY=$SECRET_KEY
+      - ALGORITHM=$ALGORITHM
+      - DJANGO_DEFAULT_DB_NAME=$DJANGO_DEFAULT_DB_NAME
+      - DJANGO_DEFAULT_DB_USERNAME=$DJANGO_DEFAULT_DB_USERNAME
+      - DJANGO_DEFAULT_DB_PASSWORD=$DJANGO_DEFAULT_DB_PASSWORD
+      - DJANGO_DEFAULT_DB_HOST=$DJANGO_DEFAULT_DB_HOST
+      - DJANGO_DEFAULT_DB_PORT=$DJANGO_DEFAULT_DB_PORT
+      - DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+      - MEDIA_ROOT_DIRECTORY=$MEDIA_ROOT_DIRECTORY
+      - FRONTEND_BASE_URL=$FRONTEND_BASE_URL
+      - DOMAIN=$DOMAIN
+    command: ["supervisord", "-n"]
