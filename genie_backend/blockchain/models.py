@@ -1,6 +1,8 @@
 from django.db import models
 from genie_backend.utils.models import BaseModel
 from accounts.models import SocialAccount
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Thumbnail
 
 
 class Network(BaseModel):
@@ -50,3 +52,48 @@ class Wallet(BaseModel):
 
     def __str__(self):
         return f"{self.network.name} - {self.address}"
+
+
+class Coin(BaseModel):
+    class Meta:
+        verbose_name = "Coin"
+        verbose_name_plural = "Coin"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["network", "name"],
+                name="unique (network, coin_name)",
+            ),
+        ]
+
+    network = models.ForeignKey(
+        Network, on_delete=models.CASCADE, related_name="coins"
+    )
+
+    name = models.CharField(
+        verbose_name="Coin name",
+        max_length=50,
+        blank=False,
+        null=False,
+        help_text="Coin name (ex. Solana, USDCoin ...)",
+    )
+
+    ticker = models.CharField(
+        verbose_name="Coin ticker",
+        max_length=10,
+        blank=False,
+        null=False,
+        help_text="Coin ticker (ex. SOL, USDC ...)",
+    )
+
+    symbol = ProcessedImageField(
+        verbose_name="coin symbol",
+        upload_to="coin_symbol",
+        help_text="coin symbol",
+        null=True,
+        blank=True,
+        processors=[Thumbnail(100, 100)],
+        format="png",
+    )
+
+    def __str__(self):
+        return f"{self.network.name} - {self.name}"
