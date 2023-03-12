@@ -60,3 +60,28 @@ class SNSConnectionInfo(BaseModel):
 
     def __str__(self):
         return f"({self.account}) : {self.sns.name} {self.handle}"
+
+
+class Server(BaseModel):
+    class Meta:
+        verbose_name = "Server"
+        verbose_name_plural = "Server"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["sns", "name"],
+                name="unique (sns, server)",
+            ),
+        ]
+
+    sns = models.ForeignKey(SNS, on_delete=models.PROTECT, related_name="servers")
+
+    name = models.CharField(
+        verbose_name="SNS server name",
+        max_length=50,
+        blank=False,
+        null=False,
+        help_text="SNS server name (ex. ATIV, NOIS, ...)",
+    )
+
+    def __str__(self):
+        return f"{self.sns.name} - {self.name}"

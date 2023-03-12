@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from genie_backend.utils.models import BaseModelAdmin
-from sns.models import SNS, SNSConnectionInfo
+from sns.models import SNS, SNSConnectionInfo, Server
 
 
 class SNSAdmin(BaseModelAdmin):
@@ -40,5 +40,20 @@ class SNSConnectionInfoAdmin(BaseModelAdmin):
     get_thumbnail_image.short_description = "User Thumbnail"
 
 
+class ServerAdmin(BaseModelAdmin):
+    list_display = (
+        "id",
+        "sns",
+        "name",
+    )
+
+    list_display_links = ("id",)
+    search_fields = (
+        "sns__name",
+        "name",
+    )
+
+
 admin.site.register(SNS, SNSAdmin)
 admin.site.register(SNSConnectionInfo, SNSConnectionInfoAdmin)
+admin.site.register(Server, ServerAdmin)
