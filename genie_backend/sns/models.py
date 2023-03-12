@@ -85,3 +85,20 @@ class Server(BaseModel):
 
     def __str__(self):
         return f"{self.sns.name} - {self.name}"
+
+
+class ServerHistory(BaseModel):
+    class Meta:
+        verbose_name = "Server History"
+        verbose_name_plural = "Server History"
+
+    server = models.ForeignKey(Server, on_delete=models.PROTECT, related_name="histories")
+
+    date = models.DateField(verbose_name="Date stored history", auto_now_add=True)
+
+    member_count = models.IntegerField(verbose_name="# of server members", null=True)
+
+    daily_chat_count = models.IntegerField(verbose_name="# of chats in server", null=True)
+
+    def __str__(self):
+        return f"({str(self.server)}) - {self.date}"

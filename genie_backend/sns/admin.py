@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from genie_backend.utils.models import BaseModelAdmin
-from sns.models import SNS, SNSConnectionInfo, Server
+from sns.models import SNS, SNSConnectionInfo, Server, ServerHistory
 
 
 class SNSAdmin(BaseModelAdmin):
@@ -54,6 +54,24 @@ class ServerAdmin(BaseModelAdmin):
     )
 
 
+class ServerHistoryAdmin(BaseModelAdmin):
+    list_display = (
+        "id",
+        "server",
+        "date",
+        "member_count",
+        "daily_chat_count",
+    )
+
+    list_display_links = ("id", )
+    search_fields = (
+        "server__name",
+        "server__sns__name",
+    )
+
+
 admin.site.register(SNS, SNSAdmin)
 admin.site.register(SNSConnectionInfo, SNSConnectionInfoAdmin)
 admin.site.register(Server, ServerAdmin)
+admin.site.register(ServerHistory, ServerHistoryAdmin)
+
