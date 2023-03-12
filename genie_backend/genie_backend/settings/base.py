@@ -34,8 +34,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "graphene_django",
     "imagekit",
+
     "accounts",
     "sns",
+    "blockchain",
 ]
 
 # *********************************************
