@@ -97,3 +97,48 @@ class Coin(BaseModel):
 
     def __str__(self):
         return f"{self.network.name} - {self.name}"
+
+
+class Collection(BaseModel):
+    class Meta:
+        verbose_name = "NFT Collection"
+        verbose_name_plural = "NFT Collection"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["network", "name"],
+                name="unique (network, nft_collection_name)",
+            ),
+        ]
+
+    network = models.ForeignKey(
+        Network, on_delete=models.CASCADE, related_name="nft_collections"
+    )
+
+    name = models.CharField(
+        verbose_name="NFT name",
+        max_length=50,
+        blank=False,
+        null=False,
+        help_text="NFT name (ex. NOIS, Sodead ...)",
+    )
+
+    mint_address = models.CharField(
+        verbose_name="mint address",
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="mint address"
+    )
+
+    thumbnail = ProcessedImageField(
+        verbose_name="nft thumbnail",
+        upload_to="nft_thumbnail",
+        help_text="nft thumbnail",
+        null=True,
+        blank=True,
+        processors=[Thumbnail(400, 400)],
+        format="png",
+    )
+
+    def __str__(self):
+        return f"{self.network.name} - {self.name}"

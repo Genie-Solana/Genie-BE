@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from genie_backend.utils.models import BaseModelAdmin
-from blockchain.models import Network, Wallet, Coin
+from blockchain.models import Network, Wallet, Coin, Collection
 
 
 class NetworkAdmin(BaseModelAdmin):
@@ -48,6 +48,29 @@ class CoinAdmin(BaseModelAdmin):
     get_symbol.short_description = "Coin Symbol"
 
 
+class CollectionAdmin(BaseModelAdmin):
+    list_display = (
+        "id",
+        "network",
+        "name",
+        "mint_address",
+        "get_thumbnail_image",
+    )
+
+    list_display_links = ("id",)
+    search_fields = ("network__name", "name", )
+
+    def get_thumbnail_image(self, obj):
+        try:
+            img_url = str(obj.thumbnail.url)
+            return mark_safe(f'<img src="{img_url}" width="100"/>')
+        except Exception:
+            return "-"
+
+    get_thumbnail_image.short_description = "NFT Collection Thumbnail"
+
+
 admin.site.register(Network, NetworkAdmin)
 admin.site.register(Wallet, WalletAdmin)
 admin.site.register(Coin, CoinAdmin)
+admin.site.register(Collection, CollectionAdmin)
