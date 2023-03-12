@@ -1,5 +1,8 @@
 from django.db import models
 from genie_backend.utils.models import BaseModel
+from accounts.models import SocialAccount
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Thumbnail
 
 
 class SNS(BaseModel):
@@ -18,3 +21,42 @@ class SNS(BaseModel):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class SNSConnectionInfo(BaseModel):
+    class Meta:
+        verbose_name = "SNS-SocialAccount info"
+        verbose_name_plural = "SNS-SocialAccount info"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["sns", "handle"],
+                name="unique sns handle",
+            ),
+        ]
+
+    account = models.ForeignKey(
+        SocialAccount, on_delete=models.CASCADE, related_name="sns_info"
+    )
+
+    sns = models.ForeignKey(SNS, on_delete=models.PROTECT, related_name="users_info")
+
+    handle = models.CharField(
+        verbose_name="SNS handle",
+        max_length=50,
+        blank=False,
+        null=False,
+        help_text="SNS handle",
+    )
+
+    profile_img = ProcessedImageField(
+        verbose_name="user profile img",
+        upload_to="user_profile_imgs",
+        help_text="user Profile img",
+        null=True,
+        blank=True,
+        processors=[Thumbnail(400, 400)],
+        format="png",
+    )
+
+    def __str__(self):
+        return f"({self.account}) : {self.sns.name} {self.handle}"

@@ -7,7 +7,9 @@ cffi==1.15.1
 cfgv==3.3.1
 distlib==0.3.6
 Django==4.1.7
+django-appconf==1.0.5
 django-cors-headers==3.14.0
+django-imagekit==4.1.0
 filelock==3.9.0
 gevent==22.10.2
 graphene==3.2.1
@@ -24,6 +26,8 @@ idna==3.4
 mypy==0.982
 mypy-extensions==1.0.0
 nodeenv==1.7.0
+pilkit==2.0
+Pillow==9.4.0
 platformdirs==2.6.2
 pre-commit==3.1.1
 promise==2.3
