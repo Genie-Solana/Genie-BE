@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from genie_backend.utils.models import BaseModelAdmin
-from blockchain.models import Network, Wallet, Coin, Collection
+from blockchain.models import Network, Wallet, Coin, Collection, TransactionHistory
 
 
 class NetworkAdmin(BaseModelAdmin):
@@ -70,7 +70,22 @@ class CollectionAdmin(BaseModelAdmin):
     get_thumbnail_image.short_description = "NFT Collection Thumbnail"
 
 
+class TransactionHistoryAdmin(BaseModelAdmin):
+    list_display = (
+        "id",
+        "type",
+        "from_account",
+        "to_account",
+        "tx_hash",
+        "server",
+    )
+
+    list_display_links = ("id",)
+    search_fields = ("server__name",)
+
+
 admin.site.register(Network, NetworkAdmin)
 admin.site.register(Wallet, WalletAdmin)
 admin.site.register(Coin, CoinAdmin)
 admin.site.register(Collection, CollectionAdmin)
+admin.site.register(TransactionHistory, TransactionHistoryAdmin)

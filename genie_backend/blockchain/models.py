@@ -1,6 +1,7 @@
 from django.db import models
 from genie_backend.utils.models import BaseModel
 from accounts.models import SocialAccount
+from sns.models import Server
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
 
@@ -142,3 +143,43 @@ class Collection(BaseModel):
 
     def __str__(self):
         return f"{self.network.name} - {self.name}"
+
+
+class TransactionHistory(BaseModel):
+    class Meta:
+        verbose_name = "Transaction History"
+        verbose_name_plural = "Transaction History"
+
+    TYPE_CHOICES = (("COIN", "COIN TX"), ("NFT", "NFT TX"))
+    type = models.CharField(
+        verbose_name="TX type",
+        blank=False,
+        max_length=10,
+        default="COIN",
+        choices=TYPE_CHOICES,
+        help_text="TX type",
+    )
+
+    from_account = models.ForeignKey(
+        SocialAccount, on_delete=models.CASCADE, related_name="from_tx", null=False, blank=False
+    )
+
+    to_account = models.ForeignKey(
+        SocialAccount, on_delete=models.CASCADE, related_name="to_tx", null=True, blank=True
+    )
+
+    tx_hash = models.CharField(
+        verbose_name="tx_hash",
+        max_length=100,
+        blank=False,
+        null=False,
+        unique=True,
+        help_text="tx hash"
+    )
+
+    server = models.ForeignKey(
+        Server, on_delete=models.CASCADE, related_name="tx_histories", null=False, blank=False, unique=True
+    )
+
+    def __str__(self):
+        return f"{self.tx_hash}({self.type})"
