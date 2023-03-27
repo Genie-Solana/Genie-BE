@@ -1,6 +1,7 @@
 import graphene
 from sns.graphql.schema import ServerType
 from sns.models import Server, SNS
+from genie_backend.utils import errors
 
 
 class CreateServer(graphene.Mutation):
@@ -45,7 +46,21 @@ class EditServer(graphene.Mutation):
         return EditServer(success=True, server=server)
 
 
+class DeleteServer(graphene.Mutation):
+    success = graphene.NonNull(graphene.Boolean)
+
+    class Arguments:
+        server_id = graphene.Int(required=True)
+
+    def mutate(self, info, server_id):
+        server = Server.get_server(server_id)
+
+        server.delete()
+
+        return DeleteServer(success=True)
+
+
 class ServerMutation(graphene.ObjectType):
     create_server = CreateServer.Field()
     edit_server = EditServer.Field()
-    
+    delete_server = DeleteServer.Field()
