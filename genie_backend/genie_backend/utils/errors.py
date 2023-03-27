@@ -36,3 +36,15 @@ class UserNotFound(GenieGraphQLException):
     error_code = "A00001"
     message = "Does Not Exist!!!"
     error_msg = "There isn't user given information."
+
+
+class SNSNotFound(GenieGraphQLException):
+    error_code = "A00002"
+    message = "Does Not Exist!!!"
+    error_msg = "SNS does not exist. Please check again."
+
+
+class CreateServerFailure(GenieGraphQLException):
+    error_code = "A00003"
+    message = "Working Failure!!!"
+    error_msg = "Failed to create server."

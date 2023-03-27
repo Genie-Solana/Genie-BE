@@ -18,8 +18,8 @@ class CreateServer(graphene.Mutation):
         try:
             server = Server(name=server_name, sns=sns)
             server.save()
-        except Exception as e:
-            print(e)
+        except Exception:
+            raise errors.CreateServerFailure
 
         return CreateServer(success=True)
 

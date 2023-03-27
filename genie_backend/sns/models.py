@@ -1,5 +1,6 @@
 from django.db import models
 from genie_backend.utils.models import BaseModel
+from genie_backend.utils import errors
 from accounts.models import SocialAccount
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
@@ -24,7 +25,7 @@ class SNS(BaseModel):
         try:
             sns = cls.objects.get(name=name)
         except cls.DoesNotExist:
-            print("SNS does not exist")
+            raise errors.SNSNotFound
 
         return sns
 
