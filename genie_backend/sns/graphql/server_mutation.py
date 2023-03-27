@@ -1,6 +1,6 @@
 import graphene
 from sns.graphql.schema import ServerType
-from sns.models import Server
+from sns.models import Server, SNS
 
 
 class CreateServer(graphene.Mutation):
@@ -8,21 +8,22 @@ class CreateServer(graphene.Mutation):
 
     class Arguments:
         server_name = graphene.String(required=True)
-        server_sns = graphene.String()
+        sns_name = graphene.String(required=True)
 
-    def mutate(self, info, server_name, server_sns=None):
+    def mutate(self, info, server_name, sns_name):
         server_name = server_name.strip()
+        sns = SNS.get_by_name(sns_name)
 
         try:
-            server = Server(name=server_name, sns=server_sns)
+            server = Server(name=server_name, sns=sns)
             server.save()
-        except Exception:
+        except Exception as e:
             # Need Revise
-            print('CreateServerError')
+            print(e)
 
         return CreateServer(success=True)
 
-
+'''
 class RemoveWallet(graphene.Mutation):
     success = graphene.NonNull(graphene.Boolean)
 
@@ -39,8 +40,8 @@ class RemoveWallet(graphene.Mutation):
         wallet.delete()
 
         return RemoveWallet(success=True)
+'''
 
-
-class WalletMutation(graphene.ObjectType):
-    add_wallet = AddWallet.Field()
-    remove_wallet = RemoveWallet.Field()
+class ServerMutation(graphene.ObjectType):
+    create_server = CreateServer.Field()
+    

@@ -18,6 +18,15 @@ class SNS(BaseModel):
         unique=True,
         help_text="SNS name (ex. Discord, Twitter ...)",
     )
+    
+    @classmethod
+    def get_by_name(cls, name):
+        try:
+            sns = cls.objects.get(name=name)
+        except cls.DoesNotExist:
+            print("SNS does not exist")
+
+        return sns
 
     def __str__(self):
         return f"{self.name}"
