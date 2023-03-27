@@ -18,30 +18,34 @@ class CreateServer(graphene.Mutation):
             server = Server(name=server_name, sns=sns)
             server.save()
         except Exception as e:
-            # Need Revise
             print(e)
 
         return CreateServer(success=True)
 
-'''
-class RemoveWallet(graphene.Mutation):
+
+class EditServer(graphene.Mutation):
     success = graphene.NonNull(graphene.Boolean)
+    server = graphene.Field(graphene.NonNull(ServerType))
 
     class Arguments:
-        network_name = graphene.String(required=True)
-        wallet_address = graphene.String(required=True)
+        server_id = graphene.Int(required=True)
+        update_server_name = graphene.String()
+        update_sns_name = graphene.String()
 
-    @check_authenticate
-    def mutate(self, info, network_name, wallet_address):
-        user = info.context.user
-        network = Network.get_by_title(network_name.strip())
-        wallet = Wallet.get_wallet(user=user, network=network, address=wallet_address.strip())
+    def mutate(self, info, server_id, update_server_name=None, update_sns_name=None):
+        server = Server.get_server(server_id)
+        
+        if update_server_name is not None:
+            server.name = update_server_name
+        if update_sns_name is not None:
+            server.sns = SNS.get_by_name(update_sns_name)
 
-        wallet.delete()
+        server.save()
 
-        return RemoveWallet(success=True)
-'''
+        return EditServer(success=True, server=server)
+
 
 class ServerMutation(graphene.ObjectType):
     create_server = CreateServer.Field()
+    edit_server = EditServer.Field()
     

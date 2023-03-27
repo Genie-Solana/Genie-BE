@@ -91,6 +91,13 @@ class Server(BaseModel):
         null=False,
         help_text="SNS server name (ex. ATIV, NOIS, ...)",
     )
+    
+    @classmethod
+    def get_server(cls, server_id: int):
+        try:
+            return cls.objects.get(id=server_id)
+        except cls.DoesNotExist:
+            return None
 
     def __str__(self):
         return f"{self.sns.name} - {self.name}"
