@@ -98,7 +98,7 @@ class Server(BaseModel):
         try:
             return cls.objects.get(id=server_id)
         except cls.DoesNotExist:
-            return None
+            raise errors.ServerNotFound
 
     def __str__(self):
         return f"{self.sns.name} - {self.name}"

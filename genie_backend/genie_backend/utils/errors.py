@@ -44,7 +44,13 @@ class SNSNotFound(GenieGraphQLException):
     error_msg = "SNS does not exist. Please check again."
 
 
-class CreateServerFailure(GenieGraphQLException):
+class ServerNotFound(GenieGraphQLException):
     error_code = "A00003"
+    message = "Does Not Exist!!!"
+    error_msg = "Server does not exist. Please check again."
+
+
+class CreateServerFailure(GenieGraphQLException):
+    error_code = "A00004"
     message = "Working Failure!!!"
     error_msg = "Failed to create server."
