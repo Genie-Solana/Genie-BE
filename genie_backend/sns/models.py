@@ -4,6 +4,7 @@ from genie_backend.utils import errors
 from accounts.models import SocialAccount
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
+from typing import Type, Optional
 
 
 class SNS(BaseModel):
@@ -11,7 +12,7 @@ class SNS(BaseModel):
         verbose_name = "SNS"
         verbose_name_plural = "SNS"
 
-    name = models.CharField(
+    name: str = models.CharField(
         verbose_name="SNS name",
         max_length=50,
         blank=False,
@@ -21,7 +22,7 @@ class SNS(BaseModel):
     )
     
     @classmethod
-    def get_by_name(cls, name):
+    def get_by_name(cls: Type['SNS'], name: str) -> Optional['SNS']:
         try:
             sns = cls.objects.get(name=name)
         except cls.DoesNotExist:
@@ -94,7 +95,7 @@ class Server(BaseModel):
     )
     
     @classmethod
-    def get_server(cls, server_id: int):
+    def get_server(cls: Type['Server'], server_id: int) -> Optional['Server']: 
         try:
             return cls.objects.get(id=server_id)
         except cls.DoesNotExist:
