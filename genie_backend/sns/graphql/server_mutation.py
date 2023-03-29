@@ -13,11 +13,11 @@ class CreateServer(graphene.Mutation):
 
     def mutate(self, info, server_name, sns_name):
         server_name = server_name.strip()
+        sns_name = sns_name.strip()
         sns = SNS.get_by_name(sns_name)
 
         try:
-            server = Server(name=server_name, sns=sns)
-            server.save()
+            Server.objects.create(name=server_name, sns=sns)
         except Exception:
             raise errors.CreateServerFailure
 
