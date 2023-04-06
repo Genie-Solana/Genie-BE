@@ -54,3 +54,21 @@ class CreateServerFailure(GenieGraphQLException):
     error_code = "A00004"
     message = "Working Failure!!!"
     error_msg = "Failed to create server."
+
+
+class WalletNotFound(GenieGraphQLException):
+    error_code = "A00005"
+    message = "Does Not Exist!!!"
+    error_msg = "Wallet does not exist. Please check again."
+
+
+class RegisterSNSFailure(GenieGraphQLException):
+    error_code = "A00006"
+    message = "Working Failure!!!"
+    error_msg = "Failed to register SNS."
+
+
+class NetworkNotFound(GenieGraphQLException):
+    error_code = "A00007"
+    message = "Does Not Exist!!!"
+    error_msg = "Network does not exist. Please check again."
