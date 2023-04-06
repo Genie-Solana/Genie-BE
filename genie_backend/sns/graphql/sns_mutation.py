@@ -33,5 +33,33 @@ class RegisterSNS(graphene.Mutation):
         return RegisterSNS(success=True)
 
 
+class UnregisterSNS(graphene.Mutation):
+    success = graphene.NonNull(graphene.Boolean)
+
+    class Arguments:
+        network_name = graphene.String(required=True)
+        address = graphene.String(required=True)
+        sns_name = graphene.String(required=True)
+        handle = graphene.String(required=True)
+
+    def mutate(self, info, network_name, address, sns_name, handle):
+        network_name = network_name.strip()
+        address = address.strip()
+        sns_name = sns_name.strip()
+        handle = handle.strip()
+        
+        network = Network.get_by_name(network_name)
+        sns = SNS.get_by_name(sns_name)
+        wallet = Wallet.get_by_network_address(network, address)
+        account = wallet.account
+        
+        sns_connection = SNSConnectionInfo.get_sns_connection(sns=sns, account=account, handle=handle)
+        
+        sns_connection.delete()
+        
+        return UnregisterSNS(success=True)
+
+
 class SNSMutation(graphene.ObjectType):
     register_sns = RegisterSNS.Field()
+    unregister_sns = UnregisterSNS.Field()
