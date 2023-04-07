@@ -62,6 +62,15 @@ class Wallet(BaseModel):
         help_text="wallet address"
     )
 
+    @classmethod
+    def get_by_network_address(cls: Type['Wallet'], network: Type['Network'], address: str) -> Optional['Wallet']:
+        try:
+            wallet = cls.objects.get(network=network, address=address)
+        except cls.DoesNotExist:
+            raise errors.WalletNotFound
+
+        return wallet
+
     def __str__(self):
         return f"{self.network.name} - {self.address}"
 

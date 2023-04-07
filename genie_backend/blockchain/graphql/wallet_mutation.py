@@ -32,5 +32,25 @@ class RegisterWallet(graphene.Mutation):
         return RegisterWallet(success=True)
 
 
+class UnregisterWallet(graphene.Mutation):
+    success = graphene.NonNull(graphene.Boolean)
+
+    class Arguments:
+        network_name = graphene.String(required=True)
+        address = graphene.String(required=True)
+
+    def mutate(self, info, network_name, address):
+        network_name = network_name.strip()
+        address = address.strip()
+        
+        network = Network.get_by_name(network_name)
+        wallet = Wallet.get_by_network_address(network, address)
+        
+        wallet.delete()
+        
+        return UnregisterWallet(success=True)
+
+
 class WalletMutation(graphene.ObjectType):
     register_wallet = RegisterWallet.Field()
+    unregister_wallet = UnregisterWallet.Field()

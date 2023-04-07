@@ -44,6 +44,12 @@ class SNSNotFound(GenieGraphQLException):
     error_msg = "SNS does not exist. Please check again."
 
 
+class WalletNotFound(GenieGraphQLException):
+    error_code = "A00005"
+    message = "Does Not Exist!!!"
+    error_msg = "Wallet does not exist. Please check again."
+
+
 class NetworkNotFound(GenieGraphQLException):
     error_code = "A00007"
     message = "Does Not Exist!!!"
