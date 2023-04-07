@@ -38,7 +38,26 @@ class UserNotFound(GenieGraphQLException):
     error_msg = "There isn't user given information."
 
 
+class SNSNotFound(GenieGraphQLException):
+    error_code = "A00002"
+    message = "Does Not Exist!!!"
+    error_msg = "SNS does not exist. Please check again."
+
+
+class NetworkNotFound(GenieGraphQLException):
+    error_code = "A00007"
+    message = "Does Not Exist!!!"
+    error_msg = "Network does not exist. Please check again."
+
+
 class AccountNotFound(GenieGraphQLException):
     error_code = "A00009"
     message = "Does Not Exist!!!"
     error_msg = "Account does not exist. Please check again."
+
+
+class RegisterWalletFailure(GenieGraphQLException):
+    error_code = "A00010"
+    message = "Working Failure!!!"
+    error_msg = "Failed to register Wallet."
+

@@ -1,5 +1,6 @@
 from django.db import models
 from genie_backend.utils.models import BaseModel
+from genie_backend.utils import errors
 from accounts.models import SocialAccount
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
@@ -19,6 +20,15 @@ class SNS(BaseModel):
         unique=True,
         help_text="SNS name (ex. Discord, Twitter ...)",
     )
+    
+    @classmethod
+    def get_by_name(cls: Type['SNS'], name: str) -> Optional['SNS']:
+        try:
+            sns = cls.objects.get(name=name)
+        except cls.DoesNotExist:
+            raise errors.SNSNotFound
+
+        return sns
 
     def __str__(self):
         return f"{self.name}"

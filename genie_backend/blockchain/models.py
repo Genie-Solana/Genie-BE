@@ -4,6 +4,8 @@ from accounts.models import SocialAccount
 from sns.models import Server
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
+from typing import Type, Optional
+from genie_backend.utils import errors
 
 
 class Network(BaseModel):
@@ -19,6 +21,15 @@ class Network(BaseModel):
         unique=True,
         help_text="Network name (ex. Solana ...)",
     )
+    
+    @classmethod 
+    def get_by_name(cls: Type['Network'], name: str) -> Optional['Network']:
+        try:
+            network = cls.objects.get(name=name)
+        except cls.DoesNotExist:
+            raise errors.NetworkNotFound
+
+        return network
 
     def __str__(self):
         return f"{self.name}"
