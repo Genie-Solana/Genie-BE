@@ -72,3 +72,9 @@ class NetworkNotFound(GenieGraphQLException):
     error_code = "A00007"
     message = "Does Not Exist!!!"
     error_msg = "Network does not exist. Please check again."
+
+
+class SNSConnectionNotFound(GenieGraphQLException):
+    error_code = "A00008"
+    message = "Does Not Exist!!!"
+    error_msg = "SNS Connection does not exist. Please check again."
