@@ -3,6 +3,7 @@ from genie_backend.utils.models import BaseModel
 from accounts.models import SocialAccount
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
+from typing import Type, Optional
 
 
 class SNS(BaseModel):
@@ -57,6 +58,13 @@ class SNSConnectionInfo(BaseModel):
         processors=[Thumbnail(400, 400)],
         format="png",
     )
+
+    @classmethod
+    def get_account(cls: Type['SNSConnectionInfo'], sns: Type['SNS'], handle: str) -> Optional['SocialAccount']:
+        try:
+            return cls.objects.get(sns=sns, handle=handle).account
+        except cls.DoesNotExist:
+            raise errors.AccountNotFound
 
     def __str__(self):
         return f"({self.account}) : {self.sns.name} {self.handle}"

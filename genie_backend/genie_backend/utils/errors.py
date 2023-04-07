@@ -36,3 +36,9 @@ class UserNotFound(GenieGraphQLException):
     error_code = "A00001"
     message = "Does Not Exist!!!"
     error_msg = "There isn't user given information."
+
+
+class AccountNotFound(GenieGraphQLException):
+    error_code = "A00009"
+    message = "Does Not Exist!!!"
+    error_msg = "Account does not exist. Please check again."
