@@ -1,9 +1,11 @@
 from django.db import models
 from genie_backend.utils.models import BaseModel
+from genie_backend.utils import errors
 from accounts.models import SocialAccount
 from sns.models import Server
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
+from typing import Type, Optional
 
 
 class Network(BaseModel):
@@ -22,6 +24,15 @@ class Network(BaseModel):
 
     def __str__(self):
         return f"{self.name}"
+
+    @classmethod 
+    def get_by_name(cls: Type['Network'], name: str) -> Type['Network']:
+        try:
+            network = cls.objects.get(name=name)
+        except cls.DoesNotExist:
+            raise errors.NetworkNotFound
+
+        return network
 
 
 class Wallet(BaseModel):
@@ -50,6 +61,15 @@ class Wallet(BaseModel):
         null=False,
         help_text="wallet address"
     )
+    
+    @classmethod
+    def get_by_network_address(cls: Type['Wallet'], network: Type['Network'], address: str) -> Type['Wallet']:
+        try:
+            wallet = cls.objects.get(network=network, address=address)
+        except cls.DoesNotExist:
+            raise errors.WalletNotFound
+
+        return wallet
 
     def __str__(self):
         return f"{self.network.name} - {self.address}"

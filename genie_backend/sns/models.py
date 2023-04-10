@@ -1,8 +1,10 @@
 from django.db import models
 from genie_backend.utils.models import BaseModel
+from genie_backend.utils import errors
 from accounts.models import SocialAccount
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
+from typing import Type, Optional
 
 
 class SNS(BaseModel):
@@ -10,7 +12,7 @@ class SNS(BaseModel):
         verbose_name = "SNS"
         verbose_name_plural = "SNS"
 
-    name = models.CharField(
+    name: str = models.CharField(
         verbose_name="SNS name",
         max_length=50,
         blank=False,
@@ -18,6 +20,15 @@ class SNS(BaseModel):
         unique=True,
         help_text="SNS name (ex. Discord, Twitter ...)",
     )
+    
+    @classmethod
+    def get_by_name(cls: Type['SNS'], name: str) -> Optional['SNS']:
+        try:
+            sns = cls.objects.get(name=name)
+        except cls.DoesNotExist:
+            raise errors.SNSNotFound
+
+        return sns
 
     def __str__(self):
         return f"{self.name}"
@@ -57,6 +68,13 @@ class SNSConnectionInfo(BaseModel):
         processors=[Thumbnail(400, 400)],
         format="png",
     )
+    
+    @classmethod
+    def get_sns_connection(cls: Type['SNSConnectionInfo'], sns: Type['SNS'], account: Type['SocialAccount'], handle: str) -> Optional['SNSConnectionInfo']:
+        try:
+            return cls.objects.get(sns=sns, account=account, handle=handle)
+        except cls.DoesNotExist:
+            raise errors.SNSConnectionNotFound
 
     def __str__(self):
         return f"({self.account}) : {self.sns.name} {self.handle}"
@@ -82,6 +100,13 @@ class Server(BaseModel):
         null=False,
         help_text="SNS server name (ex. ATIV, NOIS, ...)",
     )
+    
+    @classmethod
+    def get_server(cls: Type['Server'], server_id: int) -> Type['Server']: 
+        try:
+            return cls.objects.get(id=server_id)
+        except cls.DoesNotExist:
+            raise errors.ServerNotFound
 
     def __str__(self):
         return f"{self.sns.name} - {self.name}"
