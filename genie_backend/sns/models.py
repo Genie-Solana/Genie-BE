@@ -102,7 +102,7 @@ class Server(BaseModel):
     )
     
     @classmethod
-    def get_server(cls: Type['Server'], server_id: int) -> Optional['Server']: 
+    def get_server(cls: Type['Server'], server_id: int) -> Type['Server']: 
         try:
             return cls.objects.get(id=server_id)
         except cls.DoesNotExist:
