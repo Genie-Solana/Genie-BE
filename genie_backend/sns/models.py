@@ -68,6 +68,13 @@ class SNSConnectionInfo(BaseModel):
         processors=[Thumbnail(400, 400)],
         format="png",
     )
+    
+    @classmethod
+    def get_sns_connection(cls: Type['SNSConnectionInfo'], sns: Type['SNS'], account: Type['SocialAccount'], handle: str) -> Optional['SNSConnectionInfo']:
+        try:
+            return cls.objects.get(sns=sns, account=account, handle=handle)
+        except cls.DoesNotExist:
+            raise errors.SNSConnectionNotFound
 
     def __str__(self):
         return f"({self.account}) : {self.sns.name} {self.handle}"
