@@ -26,7 +26,7 @@ class Network(BaseModel):
         return f"{self.name}"
 
     @classmethod 
-    def get_by_name(cls: Type['Network'], name: str) -> Optional['Network']:
+    def get_by_name(cls: Type['Network'], name: str) -> Type['Network']:
         try:
             network = cls.objects.get(name=name)
         except cls.DoesNotExist:
@@ -63,7 +63,7 @@ class Wallet(BaseModel):
     )
     
     @classmethod
-    def get_by_network_address(cls: Type['Wallet'], network: Type['Network'], address: str) -> Optional['Wallet']:
+    def get_by_network_address(cls: Type['Wallet'], network: Type['Network'], address: str) -> Type['Wallet']:
         try:
             wallet = cls.objects.get(network=network, address=address)
         except cls.DoesNotExist:
