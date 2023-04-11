@@ -78,3 +78,15 @@ class SNSConnectionNotFound(GenieGraphQLException):
     error_code = "A00008"
     message = "Does Not Exist!!!"
     error_msg = "SNS Connection does not exist. Please check again."
+    
+
+class AccountNotFound(GenieGraphQLException):
+    error_code = "A00009"
+    message = "Does Not Exist!!!"
+    error_msg = "Account does not exist. Please check again."
+
+
+class RegisterWalletFailure(GenieGraphQLException):
+    error_code = "A00010"
+    message = "Working Failure!!!"
+    error_msg = "Failed to register Wallet."

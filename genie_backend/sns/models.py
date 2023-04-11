@@ -76,6 +76,13 @@ class SNSConnectionInfo(BaseModel):
         except cls.DoesNotExist:
             raise errors.SNSConnectionNotFound
 
+    @classmethod
+    def get_account(cls: Type['SNSConnectionInfo'], sns: Type['SNS'], handle: str) -> Optional['SocialAccount']:
+        try:
+            return cls.objects.get(sns=sns, handle=handle).account
+        except cls.DoesNotExist:
+            raise errors.AccountNotFound
+
     def __str__(self):
         return f"({self.account}) : {self.sns.name} {self.handle}"
 

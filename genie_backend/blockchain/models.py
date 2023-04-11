@@ -21,6 +21,15 @@ class Network(BaseModel):
         unique=True,
         help_text="Network name (ex. Solana ...)",
     )
+    
+    @classmethod 
+    def get_by_name(cls: Type['Network'], name: str) -> Optional['Network']:
+        try:
+            network = cls.objects.get(name=name)
+        except cls.DoesNotExist:
+            raise errors.NetworkNotFound
+
+        return network
 
     def __str__(self):
         return f"{self.name}"
@@ -64,6 +73,15 @@ class Wallet(BaseModel):
     
     @classmethod
     def get_by_network_address(cls: Type['Wallet'], network: Type['Network'], address: str) -> Type['Wallet']:
+        try:
+            wallet = cls.objects.get(network=network, address=address)
+        except cls.DoesNotExist:
+            raise errors.WalletNotFound
+
+        return wallet
+
+    @classmethod
+    def get_by_network_address(cls: Type['Wallet'], network: Type['Network'], address: str) -> Optional['Wallet']:
         try:
             wallet = cls.objects.get(network=network, address=address)
         except cls.DoesNotExist:
