@@ -1,12 +1,12 @@
 import graphene
-from blockchain.graphql.schema import WalletType
+from accounts.models import SocialAccount
 from blockchain.models import Wallet, Network
 from sns.models import SNS, SNSConnectionInfo
 from genie_backend.utils import errors
 
 
 class RegisterWallet(graphene.Mutation):
-    success = graphene.NonNull(graphene.Boolean)
+    success: bool = graphene.NonNull(graphene.Boolean)
 
     class Arguments:
         sns_name = graphene.String(required=True)
@@ -14,40 +14,49 @@ class RegisterWallet(graphene.Mutation):
         network_name = graphene.String(required=True)
         address = graphene.String(required=True)
 
-    def mutate(self, info, sns_name, handle, network_name, address):
-        sns_name = sns_name.strip()
-        handle = handle.strip()
-        network_name = network_name.strip()
-        address = address.strip()
+    def mutate(
+        self,
+        info: graphene.ResolveInfo,
+        sns_name: str,
+        handle: str,
+        network_name: str,
+        address: str,
+    ) -> "RegisterWallet":
+        _sns_name: str = sns_name.strip()
+        _handle: str = handle.strip()
+        _network_name: str = network_name.strip()
+        _address: str = address.strip()
 
-        sns = SNS.get_by_name(sns_name)
-        network = Network.get_by_name(network_name)
-        account = SNSConnectionInfo.get_account(sns, handle)
+        sns: "SNS" = SNS.get_by_name(_sns_name)
+        network: "Network" = Network.get_by_name(_network_name)
+        account: "SocialAccount" = SNSConnectionInfo.get_account(sns, _handle)
 
         try:
-            Wallet.objects.create(network=network, account=account, address=address)
+            Wallet.objects.create(network=network, account=account, address=_address)
         except Exception:
-            raise errors.RegisterWalletFailure
+            raise errors.RegisterWalletFailure from Exception
 
         return RegisterWallet(success=True)
 
 
 class UnregisterWallet(graphene.Mutation):
-    success = graphene.NonNull(graphene.Boolean)
+    success: bool = graphene.NonNull(graphene.Boolean)
 
     class Arguments:
         network_name = graphene.String(required=True)
         address = graphene.String(required=True)
 
-    def mutate(self, info, network_name, address):
-        network_name = network_name.strip()
-        address = address.strip()
-        
-        network = Network.get_by_name(network_name)
-        wallet = Wallet.get_by_network_address(network, address)
-        
+    def mutate(
+        self, info: graphene.ResolveInfo, network_name: str, address: str
+    ) -> "UnregisterWallet":
+        _network_name: str = network_name.strip()
+        _address: str = address.strip()
+
+        network: "Network" = Network.get_by_name(_network_name)
+        wallet: "Wallet" = Wallet.get_by_network_address(network, _address)
+
         wallet.delete()
-        
+
         return UnregisterWallet(success=True)
 
 

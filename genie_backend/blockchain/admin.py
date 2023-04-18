@@ -1,33 +1,33 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from genie_backend.utils.models import BaseModelAdmin
 from blockchain.models import Network, Wallet, Coin, Collection, TransactionHistory
+from genie_backend.utils.models import BaseModelAdmin
 
 
 class NetworkAdmin(BaseModelAdmin):
-    list_display = (
+    list_display: tuple[str, str] = (
         "id",
         "name",
     )
 
-    list_display_links = ("name",)
-    search_fields = ("name",)
+    list_display_links: tuple[str] = ("name",)
+    search_fields: tuple[str] = ("name",)
 
 
 class WalletAdmin(BaseModelAdmin):
-    list_display = (
+    list_display: tuple[str, str, str, str] = (
         "id",
         "network",
         "account",
         "address",
     )
 
-    list_display_links = ("id",)
-    search_fields = ("network__name", "address")
+    list_display_links: tuple[str] = ("id",)
+    search_fields: tuple[str, str] = ("network__name", "address")
 
 
 class CoinAdmin(BaseModelAdmin):
-    list_display = (
+    list_display: tuple[str, str, str, str, str] = (
         "id",
         "network",
         "name",
@@ -35,12 +35,12 @@ class CoinAdmin(BaseModelAdmin):
         "get_symbol",
     )
 
-    list_display_links = ("id",)
-    search_fields = ("network__name", "name", "ticker")
+    list_display_links: tuple[str] = ("id",)
+    search_fields: tuple[str, str, str] = ("network__name", "name", "ticker")
 
-    def get_symbol(self, obj):
+    def get_symbol(self, obj) -> str:
         try:
-            img_url = str(obj.symbol.url)
+            img_url: str = str(obj.symbol.url)
             return mark_safe(f'<img src="{img_url}" width="100"/>')
         except Exception:
             return "-"
@@ -49,7 +49,7 @@ class CoinAdmin(BaseModelAdmin):
 
 
 class CollectionAdmin(BaseModelAdmin):
-    list_display = (
+    list_display: tuple[str, str, str, str, str] = (
         "id",
         "network",
         "name",
@@ -57,12 +57,15 @@ class CollectionAdmin(BaseModelAdmin):
         "get_thumbnail_image",
     )
 
-    list_display_links = ("id",)
-    search_fields = ("network__name", "name", )
+    list_display_links: tuple[str] = ("id",)
+    search_fields: tuple[str, str] = (
+        "network__name",
+        "name",
+    )
 
     def get_thumbnail_image(self, obj):
         try:
-            img_url = str(obj.thumbnail.url)
+            img_url: str = str(obj.thumbnail.url)
             return mark_safe(f'<img src="{img_url}" width="100"/>')
         except Exception:
             return "-"
@@ -71,7 +74,7 @@ class CollectionAdmin(BaseModelAdmin):
 
 
 class TransactionHistoryAdmin(BaseModelAdmin):
-    list_display = (
+    list_display: tuple[str, str, str, str, str, str] = (
         "id",
         "type",
         "from_account",
@@ -80,8 +83,8 @@ class TransactionHistoryAdmin(BaseModelAdmin):
         "server",
     )
 
-    list_display_links = ("id",)
-    search_fields = ("server__name",)
+    list_display_links: tuple[str] = ("id",)
+    search_fields: tuple[str] = ("server__name",)
 
 
 admin.site.register(Network, NetworkAdmin)

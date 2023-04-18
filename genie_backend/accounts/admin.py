@@ -4,18 +4,18 @@ from genie_backend.utils.models import BaseModelAdmin
 
 
 class SocialAccountAdmin(BaseModelAdmin):
-    list_display = (
+    list_display: tuple[str, str, str] = (
         "id",
         "nickname",
         "pub_key",
     )
 
-    list_display_links = ("id",)
-    search_fields = ("nickname",)
+    list_display_links: tuple[str] = ("id",)
+    search_fields: tuple[str] = ("nickname",)
 
 
 class InboxAdmin(BaseModelAdmin):
-    list_display = (
+    list_display: tuple[str, str, str, str, str] = (
         "id",
         "account",
         "network",
@@ -23,8 +23,12 @@ class InboxAdmin(BaseModelAdmin):
         "pub_key",
     )
 
-    list_display_links = ("id",)
-    search_fields = ("account__nickname", "sns__name", "network__name", )
+    list_display_links: tuple[str] = ("id",)
+    search_fields: tuple[str, str, str] = (
+        "account__nickname",
+        "sns__name",
+        "network__name",
+    )
 
 
 admin.site.register(SocialAccount, SocialAccountAdmin)
