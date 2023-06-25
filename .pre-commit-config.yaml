@@ -3,13 +3,18 @@ repos:
     rev: v2.13.4
     hooks:
       - id: pylint
-        additional_dependencies: [django, pylint-django]
+        additional_dependencies: [django, pylint-django, django-imagekit, graphene, graphene-django]
         args:
-          - --max-line-length=99
-          - --rcfile=.pylintrc
+          - --max-line-length=120
+          #- --rcfile=.pylintrc
           - -d duplicate-code
-          - --disable=django-not-configured
+          - --disable=django-not-configured, missing-docstring, too-few-public-methods, too-many-arguments, no-self-use, invalid-name  
   - repo: https://github.com/psf/black
     rev: 22.3.0
     hooks:
       - id: black
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: ''
+    hooks:
+      - id: pyright
+        additional_dependencies: [django, django-imagekit, graphene, graphene-django]

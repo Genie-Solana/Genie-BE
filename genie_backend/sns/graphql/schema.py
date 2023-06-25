@@ -1,14 +1,12 @@
 from sns.models import Server, SNS
-import graphene
 from graphene_django.types import DjangoObjectType
 
 
 class ServerType(DjangoObjectType):
     class Meta:
-        model = Server
+        model: "Server" = Server
 
 
 class SNSType(DjangoObjectType):
     class Meta:
-        model = SNS
-
+        model: "SNS" = SNS
