@@ -90,3 +90,9 @@ class RegisterWalletFailure(GenieGraphQLException):
     error_code = "A00010"
     message = "Working Failure!!!"
     error_msg = "Failed to register Wallet."
+
+
+class CreateSocialAccountFailure(GenieGraphQLException):
+    error_code = "A00011"
+    message = "Serverless Call Failure!!!"
+    error_msg = "Failed to call CreateSocialAccount"
