@@ -96,3 +96,11 @@ class CreateSocialAccountFailure(GenieGraphQLException):
     error_code = "A00011"
     message = "Serverless Call Failure!!!"
     error_msg = "Failed to call CreateSocialAccount"
+
+
+class CreateInboxAccountFailure(GenieGraphQLException):
+    error_code = "A00012"
+    message = "Serverless Call Failure!!!"
+    error_msg = "Failed to call CreateInboxAccount"
+
+
