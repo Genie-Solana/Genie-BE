@@ -41,7 +41,7 @@ class SNSConnectionInfo(BaseModel):
         verbose_name_plural: str = "SNS-SocialAccount info"
         constraints: list[models.UniqueConstraint] = [
             models.UniqueConstraint(
-                fields=["sns", "handle"],
+                fields=["sns", "handle", "discriminator"],
                 name="unique sns handle",
             ),
         ]
@@ -65,8 +65,8 @@ class SNSConnectionInfo(BaseModel):
     discriminator: str = models.CharField(
         verbose_name="SNS discriminator",
         max_length=100,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         help_text="SNS discriminator"
     )
 
@@ -85,10 +85,10 @@ class SNSConnectionInfo(BaseModel):
         cls: Type["SNSConnectionInfo"],
         sns: SNS,
         account: SocialAccount,
-        handle: str,
+        discriminator: str,
     ) -> "SNSConnectionInfo":
         try:
-            return cls.objects.get(sns=sns, account=account, handle=handle)
+            return cls.objects.get(sns=sns, account=account, discriminator=discriminator)
         except cls.DoesNotExist as e:
             raise errors.SNSConnectionNotFound from e
 
@@ -102,7 +102,7 @@ class SNSConnectionInfo(BaseModel):
             raise errors.AccountNotFound from e
 
     def __str__(self):
-        return f"({self.account}) : {self.sns.name} {self.handle}"
+        return f"({self.account}) : {self.sns.name} {self.discriminator}"
 
 
 class Server(BaseModel):

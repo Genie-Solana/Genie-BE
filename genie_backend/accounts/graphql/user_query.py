@@ -10,18 +10,18 @@ class AccountQuery(graphene.ObjectType):
     get_social_account_info = graphene.NonNull(
         GetAccountInfoReturnType,
         sns_name=graphene.String(required=True),
-        handle=graphene.String(required=True),
+        discriminator=graphene.String(required=True),
     )
 
     def resolve_get_social_account_info(
         self, info: graphene.ResolveInfo, **kwargs
     ):
         sns_name = kwargs.get("sns_name")
-        handle = kwargs.get("handle")
+        handle = kwargs.get("discriminator")
         
         try:
             sns = SNS.get_by_name(sns_name)
-            social_account = SNSConnectionInfo.get_account(sns, handle)
+            social_account = SNSConnectionInfo.get_account(sns, discriminator)
         except:
             raise errors.AccountNotFound
 

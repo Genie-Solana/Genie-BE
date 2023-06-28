@@ -10,7 +10,7 @@ class RegisterWallet(graphene.Mutation):
 
     class Arguments:
         sns_name = graphene.String(required=True)
-        handle = graphene.String(required=True)
+        discriminator = graphene.String(required=True)
         network_name = graphene.String(required=True)
         address = graphene.String(required=True)
 
@@ -18,18 +18,18 @@ class RegisterWallet(graphene.Mutation):
         self,
         info: graphene.ResolveInfo,
         sns_name: str,
-        handle: str,
+        discriminator: str,
         network_name: str,
         address: str,
     ) -> "RegisterWallet":
         _sns_name: str = sns_name.strip()
-        _handle: str = handle.strip()
+        _discriminator: str = discriminator.strip()
         _network_name: str = network_name.strip()
         _address: str = address.strip()
 
         sns: "SNS" = SNS.get_by_name(_sns_name)
         network: "Network" = Network.get_by_name(_network_name)
-        account: "SocialAccount" = SNSConnectionInfo.get_account(sns, _handle)
+        account: "SocialAccount" = SNSConnectionInfo.get_account(sns, _discriminator)
 
         try:
             Wallet.objects.create(network=network, account=account, address=_address)
