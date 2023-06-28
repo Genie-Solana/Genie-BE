@@ -1,6 +1,6 @@
 import graphene
 from accounts.models import SocialAccount, Inbox
-from blockchain.models import Network
+from blockchain.models import Network, Wallet
 from graphene_django.types import DjangoObjectType
 
 
@@ -14,6 +14,16 @@ class InboxType(DjangoObjectType):
     class Meta:
         model = Inbox
         fields = ("pub_key", "network")
+
+
+class WalletType(DjangoObjectType):
+    class Meta:
+        model = Wallet
+        fields = ("address", "network")
+
+
+class GetUserWalletAddressReturnType(graphene.ObjectType):
+    wallet_list = graphene.List(graphene.NonNull(WalletType))
 
 
 class GetAccountInfoReturnType(graphene.ObjectType):
