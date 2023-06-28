@@ -94,10 +94,10 @@ class SNSConnectionInfo(BaseModel):
 
     @classmethod
     def get_account(
-        cls: Type["SNSConnectionInfo"], sns: SNS, handle: str
+        cls: Type["SNSConnectionInfo"], sns: SNS, discriminator: str
     ) -> "SocialAccount":
         try:
-            return cls.objects.get(sns=sns, handle=handle).account
+            return cls.objects.get(sns=sns, discriminator=discriminator).account
         except cls.DoesNotExist as e:
             raise errors.AccountNotFound from e
 

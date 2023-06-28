@@ -29,14 +29,14 @@ class CreateInboxAccount(graphene.Mutation):
 
     class Arguments:
         sns_name = graphene.String(required=True)
-        handle = graphene.String(required=True)
+        discriminator = graphene.String(required=True)
         network_name = graphene.String(required=True)
 
-    def mutate(self, info, sns_name, handle, network_name):
+    def mutate(self, info, sns_name, discriminator, network_name):
         sns = SNS.get_by_name(sns_name)
-        account = SNSConnectionInfo.get_account(sns, handle)
+        account = SNSConnectionInfo.get_account(sns, discriminator)
         network = Network.get_by_name(network_name)
-        data, sec_key = create_inbox_account_call(sns_name.lower(), handle)
+        data, sec_key = create_inbox_account_call(sns_name.lower(), discriminator)
         pub_key = data['data']['inbox_key']
         Inbox.objects.create(
             pub_key=pub_key,
@@ -48,6 +48,24 @@ class CreateInboxAccount(graphene.Mutation):
         return CreateInboxAccount(success=True)
 
 
+class ChangeSocialAccountNickname(graphene.Mutation):
+    success = graphene.NonNull(graphene.Boolean)
+
+    class Arguments:
+        sns_name = graphene.String(required=True)
+        discriminator = graphene.String(required=True)
+        nickname = graphene.String(required=True)
+
+    def mutate(self, info, sns_name, discriminator, nickname):
+        sns = SNS.get_by_name(sns_name)
+        account = SNSConnectionInfo.get_account(sns, discriminator)
+        account.nickname = nickname
+        account.save()
+
+        return ChangeSocialAccountNickname(success=True)
+
+
 class AccountMutation(graphene.ObjectType):
     create_social_account = CreateSocialAccount.Field()
     create_inbox_account = CreateInboxAccount.Field()
+    change_social_account_nickname = ChangeSocialAccountNickname.Field()
