@@ -62,6 +62,14 @@ class SNSConnectionInfo(BaseModel):
         help_text="SNS handle",
     )
 
+    discriminator: str = models.CharField(
+        verbose_name="SNS discriminator",
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="SNS discriminator"
+    )
+
     profile_img: "ProcessedImageField" = ProcessedImageField(
         verbose_name="user profile img",
         upload_to="user_profile_imgs",

@@ -20,6 +20,7 @@ class SNSConnectionInfoAdmin(BaseModelAdmin):
         "account",
         "sns",
         "handle",
+        "discriminator",
         "get_thumbnail_image",
     )
 
