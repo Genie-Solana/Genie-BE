@@ -2,7 +2,7 @@ import graphene
 from accounts.models import SocialAccount, Inbox
 from sns.models import SNS, SNSConnectionInfo
 from blockchain.models import Network
-from genie_backend.utils.api_calls import create_social_account_call, create_inbox_account_call
+from genie_backend.utils.api_calls import create_social_account_call, create_inbox_account_call, register_inbox_account_call
 from genie_backend.utils import errors
 
 
@@ -38,6 +38,7 @@ class CreateInboxAccount(graphene.Mutation):
         network = Network.get_by_name(network_name)
         data, sec_key = create_inbox_account_call(sns_name.lower(), discriminator)
         pub_key = data['data']['inbox_key']
+        register_inbox_account_call(account.secret_key, sec_key)
         Inbox.objects.create(
             pub_key=pub_key,
             secret_key=sec_key,

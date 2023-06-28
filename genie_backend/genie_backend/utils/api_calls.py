@@ -18,7 +18,6 @@ def create_social_account_call():
 
     return data, sec_key
 
-
 def create_inbox_account_call(platform, primary_key):
     keypair = Keypair()
     endpoint = SERVERLESS_ENDPOINT + 'inbox'
@@ -30,4 +29,13 @@ def create_inbox_account_call(platform, primary_key):
         raise errors.CreateInboxAccountFailure()
 
     return data, sec_key
+
+def register_inbox_account_call(sec_key_profile, sec_key_inbox):
+    endpoint = SERVERLESS_ENDPOINT + 'registerInbox'
+    response = requests.post(endpoint, json={"sec_key_profile": sec_key_profile, "sec_key_inbox": sec_key_inbox})
+    data = json.loads(response.text)
+    if not data['success']:
+        raise errors.RegisterInboxAccountFailure()
+
+    return
 

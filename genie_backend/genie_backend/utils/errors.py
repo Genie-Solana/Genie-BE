@@ -104,3 +104,9 @@ class CreateInboxAccountFailure(GenieGraphQLException):
     error_msg = "Failed to call CreateInboxAccount"
 
 
+class RegisterInboxAccountFailure(GenieGraphQLException):
+    error_code = "A00013"
+    message = "Serverless Call Failure!!!"
+    error_msg = "Failed to call RegisterInboxAccount"
+
+
