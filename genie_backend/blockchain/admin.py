@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from blockchain.models import Network, Wallet, Coin, Collection, CoinTransactionHistory, NFTTransactionHistory
+from blockchain.models import Network, Wallet, Coin, Collection, NFT, CoinTransactionHistory, NFTTransactionHistory
 from genie_backend.utils.models import BaseModelAdmin
 
 
@@ -73,11 +73,27 @@ class CollectionAdmin(BaseModelAdmin):
     get_thumbnail_image.short_description = "NFT Collection Thumbnail"
 
 
+class NFTAdmin(BaseModelAdmin):
+    list_display: tuple[str, str, str, str, str] = (
+        "id",
+        "network",
+        "name",
+        "mint_address",
+        "collection",
+    )
+
+    list_display_links: tuple[str] = ("id",)
+    search_fields: tuple[str, str] = (
+        "network__name",
+        "name",
+    )
+
+
 class CoinTransactionHistoryAdmin(BaseModelAdmin):
     list_display: tuple[str, str, str, str, str, str, str] = (
         "id",
-        "from_account",
-        "to_account",
+        "from_inbox",
+        "to_inbox",
         "tx_hash",
         "server",
         "coin",
@@ -91,11 +107,11 @@ class CoinTransactionHistoryAdmin(BaseModelAdmin):
 class NFTTransactionHistoryAdmin(BaseModelAdmin):
     list_display: tuple[str, str, str, str, str, str] = (
         "id",
-        "from_account",
-        "to_account",
+        "from_inbox",
+        "to_inbox",
         "tx_hash",
         "server",
-        "collection",
+        "nft",
     )
 
     list_display_links: tuple[str] = ("id",)
@@ -106,5 +122,6 @@ admin.site.register(Network, NetworkAdmin)
 admin.site.register(Wallet, WalletAdmin)
 admin.site.register(Coin, CoinAdmin)
 admin.site.register(Collection, CollectionAdmin)
+admin.site.register(NFT, NFTAdmin)
 admin.site.register(CoinTransactionHistory, CoinTransactionHistoryAdmin)
 admin.site.register(NFTTransactionHistory, NFTTransactionHistoryAdmin)
