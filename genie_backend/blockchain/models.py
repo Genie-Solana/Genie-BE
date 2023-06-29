@@ -167,28 +167,15 @@ class Collection(BaseModel):
         return f"{self.network.name} - {self.name}"
 
 
-class TransactionHistory(BaseModel):
+class NFTTransactionHistory(BaseModel):
     class Meta:
-        verbose_name: str = "Transaction History"
-        verbose_name_plural: str = "Transaction History"
-
-    TYPE_CHOICES: tuple[tuple[str, str], tuple[str, str]] = (
-        ("COIN", "COIN TX"),
-        ("NFT", "NFT TX"),
-    )
-    type: str = models.CharField(
-        verbose_name="TX type",
-        blank=False,
-        max_length=10,
-        default="COIN",
-        choices=TYPE_CHOICES,
-        help_text="TX type",
-    )
+        verbose_name: str = "NFT Transaction History"
+        verbose_name_plural: str = "NFT Transaction History"
 
     from_account: "SocialAccount" = models.ForeignKey(
         SocialAccount,
         on_delete=models.CASCADE,
-        related_name="from_tx",
+        related_name="from_nft_tx",
         null=False,
         blank=False,
     )
@@ -196,7 +183,7 @@ class TransactionHistory(BaseModel):
     to_account: "SocialAccount" = models.ForeignKey(
         SocialAccount,
         on_delete=models.CASCADE,
-        related_name="to_tx",
+        related_name="to_nft_tx",
         null=True,
         blank=True,
     )
@@ -213,11 +200,75 @@ class TransactionHistory(BaseModel):
     server: "Server" = models.ForeignKey(
         Server,
         on_delete=models.CASCADE,
-        related_name="tx_histories",
+        related_name="nft_tx_histories",
         null=False,
         blank=False,
-        unique=True,
+    )
+
+    collection: "Collection" = models.ForeignKey(
+        Collection,
+        on_delete=models.CASCADE,
+        related_name="nft_tx_histories",
+        null=False,
+        blank=False,
     )
 
     def __str__(self):
-        return f"{self.tx_hash}({self.type})"
+        return f"{self.tx_hash}({self.collection})"
+
+
+class CoinTransactionHistory(BaseModel):
+    class Meta:
+        verbose_name: str = "Coin Transaction History"
+        verbose_name_plural: str = "Coin Transaction History"
+
+    from_account: "SocialAccount" = models.ForeignKey(
+        SocialAccount,
+        on_delete=models.CASCADE,
+        related_name="from_coin_tx",
+        null=False,
+        blank=False,
+    )
+
+    to_account: "SocialAccount" = models.ForeignKey(
+        SocialAccount,
+        on_delete=models.CASCADE,
+        related_name="to_coin_tx",
+        null=True,
+        blank=True,
+    )
+
+    tx_hash: str = models.CharField(
+        verbose_name="tx_hash",
+        max_length=100,
+        blank=False,
+        null=False,
+        unique=True,
+        help_text="tx hash",
+    )
+
+    server: "Server" = models.ForeignKey(
+        Server,
+        on_delete=models.CASCADE,
+        related_name="coin_tx_histories",
+        null=False,
+        blank=False,
+    )
+
+    coin: "Coin" = models.ForeignKey(
+        Coin,
+        on_delete=models.CASCADE,
+        related_name="coin_tx_histories",
+        null=False,
+        blank=False,
+    )
+
+
+    amount: float = models.FloatField(
+        verbose_name="coin_amount",
+        default=0.0,
+        help_text="sent coin amount",
+    )
+
+    def __str__(self):
+        return f"{self.tx_hash}({self.coin})"
