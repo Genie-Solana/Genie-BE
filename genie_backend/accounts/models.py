@@ -32,7 +32,7 @@ class SocialAccount(BaseModel):
 
     secret_key: str = models.CharField(
         verbose_name="secret key",
-        max_length=100,
+        max_length=400,
         blank=False,
         null=False,
         help_text="secret key",
@@ -64,7 +64,7 @@ class Inbox(BaseModel):
 
     secret_key: str = models.CharField(
         verbose_name="secret key",
-        max_length=100,
+        max_length=400,
         blank=False,
         null=False,
         help_text="secret key",

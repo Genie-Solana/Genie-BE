@@ -1,6 +1,6 @@
 from typing import Type
 from django.db import models
-from accounts.models import SocialAccount
+from accounts.models import SocialAccount, Inbox
 from sns.models import Server
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
@@ -167,21 +167,70 @@ class Collection(BaseModel):
         return f"{self.network.name} - {self.name}"
 
 
+class NFT(BaseModel):
+    class Meta:
+        verbose_name: str = "NFT"
+        verbose_name_plural: str = "NFTs"
+        constraints: list[models.UniqueConstraint] = [
+            models.UniqueConstraint(
+                fields=["network", "name"],
+                name="unique (network, nft_name)",
+            ),
+        ]
+
+    network: "Network" = models.ForeignKey(
+        Network, on_delete=models.CASCADE, related_name="NFT"
+    )
+
+    name: str = models.CharField(
+        verbose_name="NFT name",
+        max_length=50,
+        blank=False,
+        null=False,
+        help_text="NFT name (ex. NOIS #100, ...)",
+    )
+
+    mint_address: str = models.CharField(
+        verbose_name="mint address",
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="mint address",
+    )
+
+    collection: "Collection" = models.ForeignKey(
+        Collection, on_delete=models.CASCADE, related_name="NFT"
+    )
+
+    image: "ProcessedImageField" = ProcessedImageField(
+        verbose_name="NFT Image",
+        upload_to="nft_image",
+        help_text="nft image",
+        null=True,
+        blank=True,
+        processors=[Thumbnail(100, 100)],
+        format="png",
+    )
+
+    def __str__(self):
+        return f"{self.network.name} - {self.name}"
+
+
 class NFTTransactionHistory(BaseModel):
     class Meta:
         verbose_name: str = "NFT Transaction History"
         verbose_name_plural: str = "NFT Transaction History"
 
-    from_account: "SocialAccount" = models.ForeignKey(
-        SocialAccount,
+    from_inbox: "Inbox" = models.ForeignKey(
+        Inbox,
         on_delete=models.CASCADE,
         related_name="from_nft_tx",
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
     )
 
-    to_account: "SocialAccount" = models.ForeignKey(
-        SocialAccount,
+    to_inbox: "Inbox" = models.ForeignKey(
+        Inbox,
         on_delete=models.CASCADE,
         related_name="to_nft_tx",
         null=True,
@@ -205,8 +254,8 @@ class NFTTransactionHistory(BaseModel):
         blank=False,
     )
 
-    collection: "Collection" = models.ForeignKey(
-        Collection,
+    nft: "NFT" = models.ForeignKey(
+        NFT,
         on_delete=models.CASCADE,
         related_name="nft_tx_histories",
         null=False,
@@ -214,7 +263,7 @@ class NFTTransactionHistory(BaseModel):
     )
 
     def __str__(self):
-        return f"{self.tx_hash}({self.collection})"
+        return f"{self.tx_hash}({self.nft})"
 
 
 class CoinTransactionHistory(BaseModel):
@@ -222,20 +271,20 @@ class CoinTransactionHistory(BaseModel):
         verbose_name: str = "Coin Transaction History"
         verbose_name_plural: str = "Coin Transaction History"
 
-    from_account: "SocialAccount" = models.ForeignKey(
-        SocialAccount,
+    from_inbox: "Inbox" = models.ForeignKey(
+        Inbox,
         on_delete=models.CASCADE,
         related_name="from_coin_tx",
         null=False,
         blank=False,
     )
 
-    to_account: "SocialAccount" = models.ForeignKey(
-        SocialAccount,
+    to_inbox: "Inbox" = models.ForeignKey(
+        Inbox,
         on_delete=models.CASCADE,
         related_name="to_coin_tx",
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
     )
 
     tx_hash: str = models.CharField(
