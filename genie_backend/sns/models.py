@@ -135,6 +135,13 @@ class Server(BaseModel):
         except cls.DoesNotExist as e:
             raise errors.ServerNotFound from e
 
+    @classmethod
+    def get_by_name(cls: Type["Server"], sns, name) -> "Server":
+        try:
+            return cls.objects.get(sns=sns, name=name)
+        except cls.DoesNotExist as e:
+            raise errors.ServerNotFound from e 
+
     def __str__(self):
         return f"{self.sns.name} - {self.name}"
 

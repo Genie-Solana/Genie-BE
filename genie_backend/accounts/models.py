@@ -1,4 +1,4 @@
-from typing import List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING, Type
 from django.db import models
 from genie_backend.utils.models import BaseModel
 
@@ -81,6 +81,15 @@ class Inbox(BaseModel):
     sns: "SNS" = models.ForeignKey(
         "sns.SNS", on_delete=models.PROTECT, related_name="inboxes"
     )
+
+    @classmethod
+    def get_inbox(
+        cls: Type["Inbox"], sns, account, network
+        ) -> "Inbox":
+        try:
+            return cls.objects.get(sns=sns, account=account, network=network)
+        except cls.DoesNotExist as e:
+            raise errors.InboxNotFound from e
 
     def __str__(self):
         return f"{self.account.nickname}({self.sns.name}) {self.pub_key}"

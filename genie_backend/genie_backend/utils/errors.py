@@ -110,3 +110,31 @@ class RegisterInboxAccountFailure(GenieGraphQLException):
     error_msg = "Failed to call RegisterInboxAccount"
 
 
+class InboxNotFound(GenieGraphQLException):
+    error_code = "A00014"
+    message = "Does Not Exist!!!"
+    error_msg = "Inbox does not exist. Please check again."
+
+
+class NFTNotFound(GenieGraphQLException):
+    error_code = "A00015"
+    message = "Does Not Exist!!!"
+    error_msg = "NFT does not exist. Please check again."
+
+
+class NFTTxHistoryFailure(GenieGraphQLException):
+    error_code = "A00016"
+    message = "Create NFTTxHistory Failure!!!"
+    error_msg = "Failed to create NFTTransactionHistory"
+
+
+class CoinNotFound(GenieGraphQLException):
+    error_code = "A00017"
+    message = "Does Not Exist!!!"
+    error_msg = "Coin does not exist. Please check again."
+
+
+class CoinTxHistoryFailure(GenieGraphQLException):
+    error_code = "A00018"
+    message = "Create CoinTxHistory Failure!!!"
+    error_msg = "Failed to create CoinTransactionHistory"
