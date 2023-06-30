@@ -125,6 +125,13 @@ class Coin(BaseModel):
         null=True,
         help_text="mint address",
     )
+    
+    @classmethod
+    def get_by_address(cls, network, mint_address):
+        try:
+            return cls.objects.get(network=network, mint_address=mint_address)
+        except cls.DoesNotExist as e:
+            raise errors.CoinNotFound from e
 
     def __str__(self):
         return f"{self.network.name} - {self.name}"
@@ -219,6 +226,13 @@ class NFT(BaseModel):
         processors=[Thumbnail(100, 100)],
         format="png",
     )
+
+    @classmethod
+    def get_by_address(cls, network, mint_address):
+        try:
+            return cls.objects.get(network=network, mint_address=mint_address)
+        except cls.DoesNotExist as e:
+            raise errors.NFTNotFound from e
 
     def __str__(self):
         return f"{self.network.name} - {self.name}"
