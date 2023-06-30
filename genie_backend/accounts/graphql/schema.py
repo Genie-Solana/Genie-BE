@@ -25,7 +25,7 @@ class WalletType(DjangoObjectType):
 class CoinType(DjangoObjectType):
     class Meta:
         model = Coin
-        fields = ("network", "ticker", "symbol")
+        fields = ("network", "ticker", "symbol", "mint_address")
 
 
 class CollectionType(DjangoObjectType):

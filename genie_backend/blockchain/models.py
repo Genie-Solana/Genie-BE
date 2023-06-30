@@ -118,6 +118,14 @@ class Coin(BaseModel):
         format="png",
     )
 
+    mint_address: str = models.CharField(
+        verbose_name="mint address",
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="mint address",
+    )
+
     def __str__(self):
         return f"{self.network.name} - {self.name}"
 
