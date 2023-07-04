@@ -8,6 +8,7 @@ from genie_backend.utils import errors
 
 class CreateSocialAccount(graphene.Mutation):
     success = graphene.NonNull(graphene.Boolean)
+    pub_key = graphene.NonNull(graphene.String)
 
     class Arguments:
         nickname = graphene.String(required=True)
@@ -21,11 +22,12 @@ class CreateSocialAccount(graphene.Mutation):
             pub_key=pub_key,
             secret_key=sec_key,
         )
-        return CreateSocialAccount(success=True)
+        return CreateSocialAccount(success=True, pub_key=pub_key)
 
 
 class CreateInboxAccount(graphene.Mutation):
     success = graphene.NonNull(graphene.Boolean)
+    pub_key = graphene.NonNull(graphene.String)
 
     class Arguments:
         sns_name = graphene.String(required=True)
@@ -46,7 +48,7 @@ class CreateInboxAccount(graphene.Mutation):
             network=network,
             sns=sns,
         )
-        return CreateInboxAccount(success=True)
+        return CreateInboxAccount(success=True, pub_key=pub_key)
 
 
 class ChangeSocialAccountNickname(graphene.Mutation):
