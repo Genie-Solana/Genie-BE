@@ -16,6 +16,8 @@ class CreateSocialAccount(graphene.Mutation):
     def mutate(self, info, nickname):
         nickname = nickname.strip()
         data, sec_key = create_social_account_call()
+        if not data['success']:
+            return CreateSocialAccount(success=False)
         pub_key = data['data']['social_account_key']
         SocialAccount.objects.create(
             nickname=nickname,
@@ -39,6 +41,8 @@ class CreateInboxAccount(graphene.Mutation):
         account = SNSConnectionInfo.get_account(sns, discriminator)
         network = Network.get_by_name(network_name)
         data, sec_key = create_inbox_account_call(sns_name.lower(), discriminator)
+        if not data['success']:
+            return CreateInboxAccount(success=False)
         pub_key = data['data']['inbox_key']
         register_inbox_account_call(account.secret_key, sec_key)
         Inbox.objects.create(
