@@ -1,6 +1,7 @@
 from typing import List, TYPE_CHECKING, Type
 from django.db import models
 from genie_backend.utils.models import BaseModel
+from genie_backend.utils import errors
 
 
 if TYPE_CHECKING:
@@ -37,6 +38,15 @@ class SocialAccount(BaseModel):
         null=False,
         help_text="secret key",
     )
+
+    @classmethod
+    def get_by_pub_key(cls: Type["SocialAccount"], pub_key: str) -> "SocialAccount":
+        try:
+            account: "SocialAccount" = cls.objects.get(pub_key=pub_key)
+        except cls.DoesNotExist as e:
+            raise errors.UserNotFound from e
+        
+        return account
 
     def __str__(self):
         return f"{self.nickname} - {self.pub_key}"
