@@ -1,6 +1,6 @@
 import graphene
 from sns.models import SNS, SNSConnectionInfo
-from blockchain.models import Wallet, Network
+from blockchain.models import Network
 from accounts.models import SocialAccount
 from genie_backend.utils import errors
 
@@ -31,8 +31,7 @@ class RegisterSNS(graphene.Mutation):
 
         network: "Network" = Network.get_by_name(_network_name)
         sns: "SNS" = SNS.get_by_name(_sns_name)
-        wallet: "Wallet" = Wallet.get_by_network_address(network, _address)
-        account: "SocialAccount" = wallet.account
+        account: "SocialAccount" = SocialAccount.get_by_pub_key(_address)
 
         try:
             SNSConnectionInfo.objects.create(
@@ -68,8 +67,7 @@ class UnregisterSNS(graphene.Mutation):
 
         network: "Network" = Network.get_by_name(_network_name)
         sns: "SNS" = SNS.get_by_name(_sns_name)
-        wallet: "Wallet" = Wallet.get_by_network_address(network, _address)
-        account: "SocialAccount" = wallet.account
+        account: "SocialAccount" = SocialAccount.get_by_pub_key(_address)
 
         sns_connection: "SNSConnectionInfo" = SNSConnectionInfo.get_sns_connection(
             sns=sns, account=account, discriminator=_discriminator
