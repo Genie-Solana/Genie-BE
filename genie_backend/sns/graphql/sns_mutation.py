@@ -1,4 +1,6 @@
+import requests
 import graphene
+from django.core.files.base import ContentFile
 from sns.models import SNS, SNSConnectionInfo
 from blockchain.models import Network
 from accounts.models import SocialAccount
@@ -14,7 +16,7 @@ class RegisterSNS(graphene.Mutation):
         sns_name = graphene.String(required=True)
         discriminator = graphene.String(required=True)
         handle = graphene.String(required=True)
-        # profile_img = graphene ~~~
+        profile_img = graphene.String(required=True)
 
     def mutate(
         self,
@@ -24,13 +26,20 @@ class RegisterSNS(graphene.Mutation):
         sns_name: str,
         discriminator: str,
         handle: str,
-        profile_img=None,
+        profile_img,
     ) -> graphene.Mutation:
         _network_name: str = network_name.strip()
         _address: str = address.strip()
         _sns_name: str = sns_name.strip()
         _discriminator: str = discriminator.strip()
         _handle: str = handle.strip()
+            
+        try:
+            response = requests.get(profile_img)
+            image_content = response.content
+            profile_img = ContentFile(image_content, f'{_sns_name}{_discriminator}.png')
+        except:
+            profile_img = None
 
         network: "Network" = Network.get_by_name(_network_name)
         sns: "SNS" = SNS.get_by_name(_sns_name)
