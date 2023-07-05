@@ -74,7 +74,7 @@ class GetAccountInfoReturnType(graphene.ObjectType):
 
 
 class GetUserInfoReturnType(graphene.ObjectType):
-    #sns_profile_img = 
+    sns_profile_img = graphene.NonNull(graphene.String)
     sns_nickname = graphene.NonNull(graphene.String)
     account_pub_key = graphene.NonNull(graphene.String)
     account_nickname = graphene.NonNull(graphene.String)

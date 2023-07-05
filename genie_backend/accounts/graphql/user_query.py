@@ -1,5 +1,6 @@
 from typing import Optional
 import graphene
+from django.conf import settings
 from django.db.models import QuerySet
 from accounts.models import Inbox
 from accounts.graphql.schema import InboxType, GetAccountInfoReturnType, GetUserInfoReturnType, GetUserWalletAddressReturnType, NFTTransactionHistoryType, CoinTransactionHistoryType, GetUserTxHistoryReturnType
@@ -54,14 +55,14 @@ class AccountQuery(graphene.ObjectType):
         social_account = SNSConnectionInfo.get_account(sns, discriminator)
         sns_connection_info = SNSConnectionInfo.get_sns_connection(sns, social_account, discriminator)
 
-        #sns_profile_img = sns_connection_info.profile_img
+        sns_profile_img = sns_connection_info.profile_img.url
         sns_nickname = sns_connection_info.handle
         account_pub_key = social_account.pub_key
         account_nickname = social_account.nickname
         inbox_list = Inbox.objects.filter(account=social_account)
 
         return GetUserInfoReturnType(
-            #sns_profile_img=sns_profile_img,
+            sns_profile_img=sns_profile_img,
             sns_nickname=sns_nickname,
             account_pub_key=account_pub_key,
             account_nickname=account_nickname,
