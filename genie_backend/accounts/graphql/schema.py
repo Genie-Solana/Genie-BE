@@ -23,9 +23,17 @@ class WalletType(DjangoObjectType):
 
 
 class CoinType(DjangoObjectType):
+    symbol = graphene.String()
+
     class Meta:
         model = Coin
-        fields = ("network", "ticker", "symbol", "mint_address")
+        fields = ("network", "ticker", "mint_address")
+
+    def resolve_symbol(self, info):
+        try:
+            return self.symbol.url
+        except:
+            return ""
 
 
 class CollectionType(DjangoObjectType):
