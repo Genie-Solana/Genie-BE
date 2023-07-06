@@ -55,7 +55,11 @@ class AccountQuery(graphene.ObjectType):
         social_account = SNSConnectionInfo.get_account(sns, discriminator)
         sns_connection_info = SNSConnectionInfo.get_sns_connection(sns, social_account, discriminator)
 
-        sns_profile_img = sns_connection_info.profile_img.url
+        try:
+            sns_profile_img = sns_connection_info.profile_img.url
+        except:
+            sns_profile_img = ""
+        
         sns_nickname = sns_connection_info.handle
         account_pub_key = social_account.pub_key
         account_nickname = social_account.nickname
