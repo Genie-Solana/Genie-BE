@@ -59,7 +59,7 @@ class UploadCoinTransactionHistory(graphene.Mutation):
         network_name = graphene.String(required=True)
         tx_hash = graphene.String(required=True)
         coin_address = graphene.String(required=True)
-        amount = graphene.Float(required=True)
+        amount = graphene.String(required=True)
 
     def mutate(
         self,
@@ -71,7 +71,7 @@ class UploadCoinTransactionHistory(graphene.Mutation):
         network_name: str,
         tx_hash: str,
         coin_address: str,
-        amount: float,
+        amount: str,
     ) -> "UploadCoinTransactionHistory":
         sns = SNS.get_by_name(sns_name)
         server = Server.get_by_name(sns, server_name)

@@ -335,9 +335,12 @@ class CoinTransactionHistory(BaseModel):
     )
 
 
-    amount: float = models.FloatField(
+    amount: float = models.CharField(
         verbose_name="coin_amount",
-        default=0.0,
+        max_length=100,
+        blank=False,
+        null=False,
+        default="0",
         help_text="sent coin amount",
     )
 
