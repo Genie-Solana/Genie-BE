@@ -1,5 +1,7 @@
 from typing import List, TYPE_CHECKING, Type
 from django.db import models
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Thumbnail
 from genie_backend.utils.models import BaseModel
 from genie_backend.utils import errors
 
@@ -37,6 +39,16 @@ class SocialAccount(BaseModel):
         blank=False,
         null=False,
         help_text="secret key",
+    )
+
+    profile_img: "ProcessedImageField" = ProcessedImageField(
+        verbose_name="social user profile img",
+        upload_to="social_user_profile_imgs",
+        help_text="user Profile img",
+        null=True,
+        blank=True,
+        processors=[Thumbnail(400, 400)],
+        format="png",
     )
 
     @classmethod

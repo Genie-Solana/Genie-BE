@@ -71,8 +71,8 @@ class SNSConnectionInfo(BaseModel):
     )
 
     profile_img: "ProcessedImageField" = ProcessedImageField(
-        verbose_name="user profile img",
-        upload_to="user_profile_imgs",
+        verbose_name="sns user profile img",
+        upload_to="sns_user_profile_imgs",
         help_text="user Profile img",
         null=True,
         blank=True,
