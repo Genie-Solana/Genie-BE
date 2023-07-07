@@ -63,6 +63,10 @@ class AccountQuery(graphene.ObjectType):
         sns_nickname = sns_connection_info.handle
         account_pub_key = social_account.pub_key
         account_nickname = social_account.nickname
+        try:
+            account_profile_img = social_account.profile_img.url
+        except:
+            account_profile_img = ""
         inbox_list = Inbox.objects.filter(account=social_account)
 
         return GetUserInfoReturnType(
@@ -70,6 +74,7 @@ class AccountQuery(graphene.ObjectType):
             sns_nickname=sns_nickname,
             account_pub_key=account_pub_key,
             account_nickname=account_nickname,
+            account_profile_img=account_profile_img,
             inbox_list=inbox_list,
         )
 
@@ -133,7 +138,7 @@ class AccountQuery(graphene.ObjectType):
                         coin=tx.coin,
                         is_sent=True,
                         tx_hash=tx.tx_hash,
-                        amount=tx.amount,
+                        amount=str(tx.amount),
                         target_sns_nickname=to_sns_nickname,
                         target_social_nickname=to_account.nickname,
                         created_at=tx.created_at,
@@ -147,7 +152,7 @@ class AccountQuery(graphene.ObjectType):
                         coin=tx.coin,
                         is_sent=False,
                         tx_hash=tx.tx_hash,
-                        amount=tx.amount,
+                        amount=str(tx.amount),
                         target_sns_nickname=from_sns_nickname,
                         target_social_nickname=from_account.nickname,
                         created_at=tx.created_at,
