@@ -169,9 +169,9 @@ class Collection(BaseModel):
     )
 
     thumbnail: "ProcessedImageField" = ProcessedImageField(
-        verbose_name="nft thumbnail",
-        upload_to="nft_thumbnail",
-        help_text="nft thumbnail",
+        verbose_name="nft collection thumbnail",
+        upload_to="nft_collection_thumbnail",
+        help_text="nft collection thumbnail",
         null=True,
         blank=True,
         processors=[Thumbnail(400, 400)],

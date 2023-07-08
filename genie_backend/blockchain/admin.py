@@ -80,6 +80,7 @@ class NFTAdmin(BaseModelAdmin):
         "name",
         "mint_address",
         "collection",
+        "get_nft_image",
     )
 
     list_display_links: tuple[str] = ("id",)
@@ -87,6 +88,15 @@ class NFTAdmin(BaseModelAdmin):
         "network__name",
         "name",
     )
+
+    def get_nft_image(self, obj):
+        try:
+            img_url: str = str(obj.image.url)
+            return mark_safe(f'<img src="{img_url}" width="100"/>')
+        except Exception:
+            return "-"
+
+    get_nft_image.short_description = "NFT Collection Thumbnail"
 
 
 class CoinTransactionHistoryAdmin(BaseModelAdmin):
