@@ -106,11 +106,12 @@ class AccountQuery(graphene.ObjectType):
         for inbox in inbox_list:
             for tx in NFTTransactionHistory.objects.filter(from_inbox=inbox):
                 to_account = tx.to_inbox.account
-                to_sns_nickname = SNSConnectionInfo.objects.get(sns=tx.to_inbox.sns, account=to_account).handle
+                to_sns_info = SNSConnectionInfo.objects.get(sns=tx.to_inbox.sns, account=to_account)
+                to_sns_nickname = to_sns_info.handle
                 try:
-                    to_account_profile_img = to_account.profile_img.url
+                    to_sns_profile_img = to_sns_info.profile_img.url
                 except:
-                    to_account_profile_img = ""
+                    to_sns_profile_img = ""
 
                 nft_tx_list.append(
                     NFTTransactionHistoryType(
@@ -119,17 +120,18 @@ class AccountQuery(graphene.ObjectType):
                         tx_hash=tx.tx_hash,
                         target_sns_nickname=to_sns_nickname,
                         target_social_nickname=to_account.nickname,
-                        target_profile_img=to_account_profile_img,
+                        target_profile_img=to_sns_profile_img,
                         created_at=str(tx.created_at),
                     )
                 )
             for tx in NFTTransactionHistory.objects.filter(to_inbox=inbox):
                 from_account = tx.from_inbox.account
-                from_sns_nickname = SNSConnectionInfo.objects.get(sns=tx.from_inbox.sns, account=from_account).handle
+                from_sns_info = SNSConnectionInfo.objects.get(sns=tx.from_inbox.sns, account=from_account)
+                from_sns_nickname = from_sns_info.handle
                 try:
-                    from_account_profile_img = from_account.profile_img.url
+                    from_sns_profile_img = from_sns_info.profile_img.url
                 except:
-                    from_account_profile_img = ""
+                    from_sns_profile_img = ""
 
                 nft_tx_list.append(
                     NFTTransactionHistoryType(
@@ -138,17 +140,18 @@ class AccountQuery(graphene.ObjectType):
                         tx_hash=tx.tx_hash,
                         target_sns_nickname=from_sns_nickname,
                         target_social_nickname=from_account.nickname,
-                        target_profile_img=from_account_profile_img,
+                        target_profile_img=from_sns_profile_img,
                         created_at=str(tx.created_at),
                     )
                 )
             for tx in CoinTransactionHistory.objects.filter(from_inbox=inbox):
                 to_account = tx.to_inbox.account
-                to_sns_nickname = SNSConnectionInfo.objects.get(sns=tx.to_inbox.sns, account=to_account).handle
+                to_sns_info = SNSConnectionInfo.objects.get(sns=tx.to_inbox.sns, account=to_account)
+                to_sns_nickname = to_sns_info.handle
                 try:
-                    to_account_profile_img = to_account.profile_img.url
+                    to_sns_profile_img = to_sns_info.profile_img.url
                 except:
-                    to_account_profile_img = ""
+                    to_sns_profile_img = ""
 
                 coin_tx_list.append(
                     CoinTransactionHistoryType(
@@ -158,17 +161,18 @@ class AccountQuery(graphene.ObjectType):
                         amount=tx.amount,
                         target_sns_nickname=to_sns_nickname,
                         target_social_nickname=to_account.nickname,
-                        target_profile_img=to_account_profile_img,
+                        target_profile_img=to_sns_profile_img,
                         created_at=str(tx.created_at),
                     )
                 )
             for tx in CoinTransactionHistory.objects.filter(to_inbox=inbox):
                 from_account = tx.from_inbox.account
-                from_sns_nickname = SNSConnectionInfo.objects.get(sns=tx.from_inbox.sns, account=from_account).handle
+                from_sns_info = SNSConnectionInfo.objects.get(sns=tx.from_inbox.sns, account=from_account)
+                from_sns_nickname = from_sns_info.handle
                 try:
-                    from_account_profile_img = from_account.profile_img.url
+                    from_sns_profile_img = from_sns_info.profile_img.url
                 except:
-                    from_account_profile_img = ""
+                    from_sns_profile_img = ""
 
                 coin_tx_list.append(
                     CoinTransactionHistoryType(
@@ -178,7 +182,7 @@ class AccountQuery(graphene.ObjectType):
                         amount=tx.amount,
                         target_sns_nickname=from_sns_nickname,
                         target_social_nickname=from_account.nickname,
-                        target_profile_img=from_account_profile_img,
+                        target_profile_img=from_sns_profile_img,
                         created_at=str(tx.created_at),
                     )
                 )
