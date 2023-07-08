@@ -55,7 +55,8 @@ class CoinTransactionHistoryType(graphene.ObjectType):
     amount = graphene.NonNull(graphene.String)
     target_sns_nickname = graphene.NonNull(graphene.String)
     target_social_nickname = graphene.NonNull(graphene.String)
-    created_at = graphene.NonNull(graphene.DateTime)
+    target_profile_img = graphene.NonNull(graphene.String)
+    created_at = graphene.NonNull(graphene.String)
 
 
 class NFTTransactionHistoryType(graphene.ObjectType):
@@ -64,7 +65,8 @@ class NFTTransactionHistoryType(graphene.ObjectType):
     tx_hash = graphene.NonNull(graphene.String)
     target_sns_nickname = graphene.NonNull(graphene.String)
     target_social_nickname = graphene.NonNull(graphene.String)
-    created_at = graphene.NonNull(graphene.DateTime)
+    target_profile_img = graphene.NonNull(graphene.String)
+    created_at = graphene.NonNull(graphene.String)
 
 
 class GetUserTxHistoryReturnType(graphene.ObjectType):
