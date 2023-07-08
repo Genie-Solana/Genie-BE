@@ -43,9 +43,17 @@ class CollectionType(DjangoObjectType):
 
 
 class NFTType(DjangoObjectType):
+    nft_image = graphene.String()
+
     class Meta:
         model = NFT
         fields = ("network", "name", "mint_address", "collection")
+
+    def resolve_nft_image(self, info):
+        try:
+            return self.image.url
+        except:
+            return ""
 
 
 class CoinTransactionHistoryType(graphene.ObjectType):
