@@ -1,4 +1,5 @@
 import graphene
+from graphene_file_upload.scalars import Upload
 from accounts.models import SocialAccount, Inbox
 from sns.models import SNS, SNSConnectionInfo
 from blockchain.models import Network
@@ -71,8 +72,25 @@ class ChangeSocialAccountNickname(graphene.Mutation):
 
         return ChangeSocialAccountNickname(success=True)
 
+class UploadAccountProfileImg(graphene.Mutation):
+    success = graphene.NonNull(graphene.Boolean)
+
+    class Arguments:
+        sns_name = graphene.String(required=True)
+        discriminator = graphene.String(required=True)
+        profile_img = Upload(required=True, description="Social Account Profile Image") 
+
+    def mutate(self, info, sns_name, discriminator, profile_img):
+        sns = SNS.get_by_name(sns_name)
+        account = SNSConnectionInfo.get_account(sns, discriminator) 
+        account.profile_img = profile_img
+        account.save()
+
+        return UploadAccountProfileImg(success=True)
+
 
 class AccountMutation(graphene.ObjectType):
     create_social_account = CreateSocialAccount.Field()
     create_inbox_account = CreateInboxAccount.Field()
     change_social_account_nickname = ChangeSocialAccountNickname.Field()
+    upload_account_profile_img = UploadAccountProfileImg.Field()
