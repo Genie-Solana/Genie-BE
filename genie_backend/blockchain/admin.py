@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from blockchain.models import Network, Wallet, Coin, Collection, NFT, CoinTransactionHistory, NFTTransactionHistory
+from blockchain.models import Network, Wallet, Coin, Collection, NFT, CoinTransactionHistory, NFTTransactionHistory, WalletTransactionHistory
 from genie_backend.utils.models import BaseModelAdmin
 
 
@@ -128,6 +128,19 @@ class NFTTransactionHistoryAdmin(BaseModelAdmin):
     search_fields: tuple[str] = ("server__name",)
 
 
+class WalletTransactionHistoryAdmin(BaseModelAdmin):
+    list_display: tuple[str, str, str, str, str] = (
+        "id",
+        "account",
+        "wallet_address",
+        "tx_hash",
+        "register_type",
+    )
+
+    list_display_links: tuple[str] = ("id",)
+    search_fields: tuple[str] = ("account__nickname",)
+
+
 admin.site.register(Network, NetworkAdmin)
 admin.site.register(Wallet, WalletAdmin)
 admin.site.register(Coin, CoinAdmin)
@@ -135,3 +148,4 @@ admin.site.register(Collection, CollectionAdmin)
 admin.site.register(NFT, NFTAdmin)
 admin.site.register(CoinTransactionHistory, CoinTransactionHistoryAdmin)
 admin.site.register(NFTTransactionHistory, NFTTransactionHistoryAdmin)
+admin.site.register(WalletTransactionHistory, WalletTransactionHistoryAdmin)
