@@ -95,7 +95,7 @@ class Coin(BaseModel):
     name: str = models.CharField(
         verbose_name="Coin name",
         max_length=50,
-        blank=False,
+        blank=True,
         null=False,
         help_text="Coin name (ex. Solana, USDCoin ...)",
     )
@@ -103,7 +103,7 @@ class Coin(BaseModel):
     ticker: str = models.CharField(
         verbose_name="Coin ticker",
         max_length=10,
-        blank=False,
+        blank=True,
         null=False,
         help_text="Coin ticker (ex. SOL, USDC ...)",
     )
@@ -346,3 +346,41 @@ class CoinTransactionHistory(BaseModel):
 
     def __str__(self):
         return f"{self.tx_hash}({self.coin})"
+
+
+class WalletTransactionHistory(BaseModel):
+    class Meta:
+        verbose_name: str = "Wallet Transaction History"
+        verbose_name_plural: str = "Wallet Transaction History"
+
+    account: "SocialAccount" = models.ForeignKey(
+        SocialAccount, on_delete=models.CASCADE, related_name="wallet_transaction_history"
+    )
+
+    wallet_address: str = models.CharField(
+        verbose_name="wallet_address",
+        max_length=100,
+        blank=False,
+        null=False,
+        unique=False,
+        help_text="wallet address",
+    )
+
+    tx_hash: str = models.CharField(
+        verbose_name="tx_hash",
+        max_length=100,
+        blank=False,
+        null=False,
+        unique=True,
+        help_text="tx hash",
+    )
+
+    register_type = models.CharField(
+        verbose_name="register_type",
+        max_length=10,
+        choices=(("REGISTER", "REGISTER"), ("UNREGISTER", "UNREGISTER")),
+        help_text="Register type",
+    )
+
+    def __str__(self):
+        return f"{self.tx_hash}({self.wallet_address})"
